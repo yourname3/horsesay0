@@ -18,25 +18,26 @@ fn format(text: String) -> (String, i32) {
 
     for char in text.chars() {
         match char {
+            // Skip carriage returns.
             '\r' => { continue; }
             ' ' | '\t' => {
                 if cur_line >= max_line {
+                    // Simple word wrap.
                     formatted.push('\n');
                     cur_line = 0;
                 }
                 else {
-                    if char == '\t' {
-                        formatted.push_str("    ");
-                        cur_line += 4;
-                    }
-                    else {
-                        formatted.push(' ');
-                        cur_line += 1;
-                    }
+                    // Skip whitespace at the beginning of lines.
+                    if cur_line == 0 { continue; }
+
+                    // Turn tabs into spaces.
+                    formatted.push(' ');
+                    cur_line += 1;
                 }
             },
             '\n' => {
-                formatted.push(char);
+                // Turn line breaks into double-line breaks.
+                formatted.push_str("\n\n");
                 cur_line = 0;
             }
             _ => {
